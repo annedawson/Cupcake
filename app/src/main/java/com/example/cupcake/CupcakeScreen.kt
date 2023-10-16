@@ -38,6 +38,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.navigation.compose.composable
 import com.example.cupcake.ui.StartOrderScreen
 import com.example.cupcake.data.DataSource
+import androidx.compose.ui.platform.LocalContext
+import com.example.cupcake.ui.SelectOptionScreen
+import com.example.cupcake.data.DataSource.flavors
+import com.example.cupcake.ui.OrderSummaryScreen
+
 
 enum class CupcakeScreen() {
     Start,
@@ -94,11 +99,41 @@ fun CupcakeApp(
             startDestination = CupcakeScreen.Start.name,
             modifier = Modifier.padding(innerPadding)
         ) {
+
             composable(route = CupcakeScreen.Start.name) {
                 StartOrderScreen(
                     quantityOptions = DataSource.quantityOptions
                 )
             }
+
+            composable(route = CupcakeScreen.Flavor.name) {
+                val context = LocalContext.current  // recommended method to get
+                                                    // context in a composable
+                SelectOptionScreen(
+                    subtotal = uiState.price,
+                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
+                    onSelectionChanged = { viewModel.setFlavor(it) }
+                    // onSelectionChanged is a function type that accepts a lambda {}
+                    // when the selection is changed, the new selection is called "it",
+                    // the single parameter that is passed to setFlavor to update viewModel
+                )
+            }
+
+            composable(route = CupcakeScreen.Pickup.name) {
+                SelectOptionScreen(
+                    subtotal = uiState.price,
+                    options = uiState.pickupOptions,
+                    onSelectionChanged = { viewModel.setDate(it) }
+                )
+            }
+
+            composable(route = CupcakeScreen.Summary.name) {
+                OrderSummaryScreen(
+                    orderUiState = uiState
+                )
+            }
+
+
         }
     }
 }
