@@ -15,6 +15,7 @@
  */
 package com.example.cupcake
 
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -102,7 +103,10 @@ fun CupcakeApp(
 
             composable(route = CupcakeScreen.Start.name) {
                 StartOrderScreen(
-                    quantityOptions = DataSource.quantityOptions
+                    quantityOptions = DataSource.quantityOptions,
+                    onNextButtonClicked = {}
+                    // had to add this parameter to the StartOrderScreen call
+                    // to match the definition of StartOrderScreen
                 )
             }
 
@@ -129,7 +133,13 @@ fun CupcakeApp(
 
             composable(route = CupcakeScreen.Summary.name) {
                 OrderSummaryScreen(
-                    orderUiState = uiState
+                    orderUiState = uiState,
+                    onCancelButtonClicked = {},
+                    // the line below I adapted from the CupcakeScreen.kt solution file
+                    // the original codelab code did not compile:
+                    // onSendButtonClicked: (String, String) -> Unit,
+                    onSendButtonClicked = { subject: String, summary: String -> },
+                    modifier = Modifier.fillMaxHeight()
                 )
             }
 
